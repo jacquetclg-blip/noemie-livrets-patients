@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livrets patients — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #4A7FB5;
+  --secondary: #7DB89B;
+  --warm: #E07B54;
+  --soft: #F2D07A;
+  --bg: #FAF8F5;
+  --text: #2E2E2E;
+  --light: #7A7A7A;
+  --red: #C0392B;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* AUTH */
+#auth-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef4fa 0%, var(--bg) 100%);
+}
+.auth-box {
+  background: white; border-radius: 16px; padding: 48px 40px;
+  box-shadow: 0 8px 40px rgba(74,127,181,0.12); text-align: center; width: 360px;
+}
+.auth-box h1 { font-family: 'Playfair Display', serif; color: var(--primary); font-size: 22px; margin-bottom: 6px; }
+.auth-box p { color: var(--light); font-size: 14px; margin-bottom: 28px; }
+.auth-box input {
+  width: 100%; padding: 12px 16px; border: 1.5px solid #e0e0e0;
+  border-radius: 8px; font-size: 16px; font-family: 'Lato', sans-serif;
+  outline: none; transition: border-color 0.2s; margin-bottom: 14px;
+  text-align: center; letter-spacing: 3px;
+}
+.auth-box input:focus { border-color: var(--primary); }
+.auth-box button {
+  width: 100%; padding: 12px; background: var(--primary); color: white;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: 'Lato', sans-serif; transition: opacity 0.2s;
+}
+.auth-box button:hover { opacity: 0.88; }
+.auth-error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+
+/* SETUP */
+#setup-screen {
+  display: none; align-items: center; justify-content: center;
+  min-height: 100vh; background: linear-gradient(135deg, #eef4fa 0%, var(--bg) 100%);
+}
+.setup-box {
+  background: white; border-radius: 16px; padding: 40px;
+  box-shadow: 0 8px 40px rgba(74,127,181,0.12); width: 480px;
+}
+.setup-box h2 { font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 8px; }
+.setup-box p { color: var(--light); font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+.setup-box input {
+  width: 100%; padding: 10px 14px; border: 1.5px solid #e0e0e0;
+  border-radius: 8px; font-size: 13px; font-family: 'Lato', monospace;
+  outline: none; transition: border-color 0.2s; margin-bottom: 12px;
+}
+.setup-box input:focus { border-color: var(--primary); }
+.setup-box button {
+  width: 100%; padding: 11px; background: var(--primary); color: white;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: 'Lato', sans-serif; transition: opacity 0.2s;
+}
+.setup-box button:hover { opacity: 0.88; }
+
+/* DASHBOARD */
+#dashboard { display: none; }
+
+header {
+  background: white; border-bottom: 1px solid #eee;
+  padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+header h1 { font-family: 'Playfair Display', serif; color: var(--primary); font-size: 20px; }
+header .subtitle { color: var(--light); font-size: 13px; margin-top: 2px; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.btn-refresh {
+  padding: 8px 16px; background: var(--primary); color: white;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: 'Lato', sans-serif; transition: opacity 0.2s;
+}
+.btn-refresh:hover { opacity: 0.85; }
+.btn-logout {
+  padding: 8px 14px; background: none; border: 1.5px solid #e0e0e0;
+  border-radius: 8px; font-size: 13px; color: var(--light);
+  cursor: pointer; font-family: 'Lato', sans-serif;
+}
+
+/* FILTERS */
+.filters {
+  padding: 20px 32px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  background: white; border-bottom: 1px solid #f0f0f0;
+}
+.filter-label { font-size: 13px; color: var(--light); font-weight: 600; margin-right: 4px; }
+.filter-btn {
+  padding: 6px 16px; border-radius: 20px; border: 1.5px solid #e0e0e0;
+  background: none; cursor: pointer; font-size: 13px; font-family: 'Lato', sans-serif;
+  color: var(--light); font-weight: 500; transition: all 0.2s;
+}
+.filter-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(74,127,181,0.08); font-weight: 700; }
+.filter-btn.f-termine.active { border-color: var(--secondary); color: #2d8a5e; background: rgba(125,184,155,0.1); }
+.filter-btn.f-encours.active { border-color: #c8a800; color: #9a7200; background: rgba(242,208,122,0.15); }
+.count-badge { font-size: 11px; background: #f0f0f0; border-radius: 10px; padding: 1px 6px; margin-left: 4px; }
+
+/* GRID */
+.grid { padding: 28px 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+
+.card {
+  background: white; border-radius: 12px; padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 2px solid transparent;
+  transition: box-shadow 0.2s, transform 0.15s;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.card.s-termine { border-color: rgba(125,184,155,0.4); }
+.card.s-encours  { border-color: rgba(242,208,122,0.6); }
+
+.card-title { font-weight: 700; font-size: 14px; color: var(--text); line-height: 1.4; }
+
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; width: fit-content;
+}
+.status-badge.s-termine  { background: rgba(125,184,155,0.2); color: #2d8a5e; }
+.status-badge.s-encours  { background: rgba(242,208,122,0.3); color: #9a7200; }
+.status-badge.s-pas      { background: #f3f3f3; color: var(--light); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.card-actions { display: flex; gap: 7px; flex-wrap: wrap; margin-top: auto; }
+.action-btn {
+  flex: 1; padding: 7px 10px; border-radius: 7px; border: 1.5px solid #e8e8e8;
+  background: none; font-size: 12px; cursor: pointer; font-family: 'Lato', sans-serif;
+  font-weight: 600; color: var(--light); transition: all 0.18s; white-space: nowrap;
+}
+.action-btn:hover { background: #f8f8f8; }
+.action-btn.a-validate { border-color: var(--secondary); color: #2d8a5e; }
+.action-btn.a-validate:hover { background: rgba(125,184,155,0.1); }
+.action-btn.a-inprogress { border-color: #c8a800; color: #9a7200; }
+.action-btn.a-inprogress:hover { background: rgba(242,208,122,0.1); }
+
+.loading { padding: 60px; text-align: center; color: var(--light); font-size: 15px; grid-column: 1 / -1; }
+.spinner {
+  width: 32px; height: 32px; border: 3px solid #e0e0e0;
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.7s linear infinite; margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-box { padding: 40px; text-align: center; color: var(--red); grid-column: 1 / -1; }
+.error-reset {
+  margin-top: 14px; padding: 8px 18px; background: var(--primary); color: white;
+  border: none; border-radius: 8px; cursor: pointer; font-family: 'Lato', sans-serif;
+  font-size: 14px;
+}
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--text); color: white; padding: 12px 20px;
+  border-radius: 10px; font-size: 14px; font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 100;
+  opacity: 0; transform: translateY(8px); transition: all 0.25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: #2d8a5e; }
+.toast.error-toast { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div style="font-size:42px;margin-bottom:12px">📋</div>
+    <h1>Livrets Patients</h1>
+    <p>Noémie Bouisset · Kinésithérapeute</p>
+    <input type="password" id="pwd-input" placeholder="••••••" autocomplete="off">
+    <button id="auth-btn">Accéder</button>
+    <p class="auth-error" id="auth-error">Mot de passe incorrect</p>
+  </div>
+</div>
+
+<!-- SETUP NOTION TOKEN -->
+<div id="setup-screen">
+  <div class="setup-box">
+    <div style="font-size:36px;margin-bottom:12px">🔗</div>
+    <h2>Connexion Notion</h2>
+    <p>Entre ton token d'intégration Notion.<br>
+    Disponible dans <strong>notion.so → Paramètres → Intégrations → Mes intégrations</strong><br>
+    (commence par <code>secret_...</code> ou <code>ntn_...</code>)</p>
+    <input type="text" id="token-input" placeholder="secret_xxxxxxxxxxxx" autocomplete="off">
+    <button id="token-btn">Connecter</button>
+    <p style="margin-top:12px;font-size:12px;color:var(--light)">Le token est stocké uniquement dans ce navigateur.</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <header>
+    <div>
+      <h1>Livrets Patients</h1>
+      <p class="subtitle" id="subtitle">Chargement...</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-refresh" id="btn-refresh">Actualiser</button>
+      <button class="btn-logout" id="btn-logout">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <span class="filter-label">Filtrer :</span>
+    <button class="filter-btn active" data-filter="all">Tous <span class="count-badge" id="count-all">0</span></button>
+    <button class="filter-btn" data-filter="Pas commencé">Pas commencé <span class="count-badge" id="count-pas">0</span></button>
+    <button class="filter-btn f-encours" data-filter="En cours">En cours <span class="count-badge" id="count-en">0</span></button>
+    <button class="filter-btn f-termine" data-filter="Terminé">Terminé <span class="count-badge" id="count-termine">0</span></button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATABASE_ID = '327a20d2dec08003822bfaa67a8c2de5';
+const PASSWORD    = 'noemie';
+let allLivrets    = [];
+let currentFilter = 'all';
+
+// ── AUTH ──────────────────────────────────────────────────
+function checkPassword() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === PASSWORD) {
+    sessionStorage.setItem('auth', '1');
+    document.getElementById('auth-screen').style.display = 'none';
+    localStorage.getItem('notion_token') ? showDashboard() : showSetup();
+  } else {
+    document.getElementById('auth-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function showSetup() { document.getElementById('setup-screen').style.display = 'flex'; }
+
+function saveToken() {
+  const t = document.getElementById('token-input').value.trim();
+  if (!t) return;
+  localStorage.setItem('notion_token', t);
+  document.getElementById('setup-screen').style.display = 'none';
+  showDashboard();
+}
+
+function logout() { sessionStorage.removeItem('auth'); location.reload(); }
+function showDashboard() { document.getElementById('dashboard').style.display = 'block'; loadLivrets(); }
+
+document.getElementById('auth-btn').addEventListener('click', checkPassword);
+document.getElementById('pwd-input').addEventListener('keydown', e => e.key === 'Enter' && checkPassword());
+document.getElementById('token-btn').addEventListener('click', saveToken);
+document.getElementById('token-input').addEventListener('keydown', e => e.key === 'Enter' && saveToken());
+document.getElementById('btn-refresh').addEventListener('click', loadLivrets);
+document.getElementById('btn-logout').addEventListener('click', logout);
+
+// Filters
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderGrid();
+  });
+});
+
+// ── NOTION API ──────────────────────────────────────────────
+async function notionReq(method, path, body) {
+  const token = localStorage.getItem('notion_token');
+  const res = await fetch('https://api.notion.com/v1' + path, {
+    method,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur ' + res.status);
+  return data;
+}
+
+async function loadLivrets() {
+  showLoadingGrid();
+  try {
+    const data = await notionReq('POST', '/databases/' + DATABASE_ID + '/query', {
+      sorts: [
+        { property: 'Status', direction: 'ascending' },
+        { timestamp: 'created_time', direction: 'ascending' }
+      ],
+      page_size: 100
+    });
+    allLivrets = data.results.map(page => ({
+      id: page.id,
+      title: page.properties.Nom?.title?.[0]?.plain_text || '(Sans titre)',
+      status: page.properties.Status?.status?.name || 'Pas commencé'
+    }));
+    updateCounts();
+    renderGrid();
+    document.getElementById('subtitle').textContent = allLivrets.length + ' livrets · Synchronisé';
+  } catch (e) {
+    showErrorGrid(e.message);
+  }
+}
+
+// ── RENDERING ──────────────────────────────────────────────
+function showLoadingGrid() {
+  const grid = document.getElementById('grid');
+  grid.textContent = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'loading';
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  const txt = document.createTextNode('Chargement...');
+  wrap.appendChild(spinner);
+  wrap.appendChild(txt);
+  grid.appendChild(wrap);
+}
+
+function showErrorGrid(msg) {
+  const grid = document.getElementById('grid');
+  grid.textContent = '';
+  const box = document.createElement('div');
+  box.className = 'error-box';
+  const txt = document.createElement('p');
+  txt.textContent = 'Erreur de connexion Notion : ' + msg;
+  const btn = document.createElement('button');
+  btn.className = 'error-reset';
+  btn.textContent = 'Reconfigurer le token';
+  btn.addEventListener('click', () => { localStorage.removeItem('notion_token'); location.reload(); });
+  box.appendChild(txt);
+  box.appendChild(btn);
+  grid.appendChild(box);
+}
+
+function statusClass(status) {
+  if (status === 'Terminé')      return 's-termine';
+  if (status === 'En cours')     return 's-encours';
+  return 's-pas';
+}
+
+function cardClass(status) {
+  if (status === 'Terminé')  return 's-termine';
+  if (status === 'En cours') return 's-encours';
+  return '';
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.textContent = '';
+
+  const filtered = currentFilter === 'all'
+    ? allLivrets
+    : allLivrets.filter(l => l.status === currentFilter);
+
+  if (!filtered.length) {
+    const empty = document.createElement('div');
+    empty.className = 'loading';
+    empty.textContent = 'Aucun livret dans cette catégorie.';
+    grid.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(l => {
+    const card = document.createElement('div');
+    card.className = 'card ' + cardClass(l.status);
+    card.id = 'card-' + l.id;
+
+    // Title
+    const title = document.createElement('div');
+    title.className = 'card-title';
+    title.textContent = l.title;
+
+    // Badge
+    const badge = document.createElement('div');
+    badge.className = 'status-badge ' + statusClass(l.status);
+    const dot = document.createElement('span');
+    dot.className = 'status-dot';
+    const statusTxt = document.createTextNode(l.status);
+    badge.appendChild(dot);
+    badge.appendChild(statusTxt);
+
+    // Actions
+    const actions = document.createElement('div');
+    actions.className = 'card-actions';
+
+    if (l.status !== 'Terminé') {
+      const btnV = makeActionBtn('Validé', 'a-validate', l.id, 'Terminé');
+      actions.appendChild(btnV);
+    }
+    if (l.status !== 'En cours') {
+      const btnE = makeActionBtn('En cours', 'a-inprogress', l.id, 'En cours');
+      actions.appendChild(btnE);
+    }
+    if (l.status !== 'Pas commencé') {
+      const btnR = makeActionBtn('Réinitialiser', 'action-btn', l.id, 'Pas commencé');
+      actions.appendChild(btnR);
+    }
+
+    card.appendChild(title);
+    card.appendChild(badge);
+    card.appendChild(actions);
+    grid.appendChild(card);
+  });
+}
+
+function makeActionBtn(label, cls, pageId, newStatus) {
+  const btn = document.createElement('button');
+  btn.className = 'action-btn ' + cls;
+  btn.textContent = label;
+  btn.addEventListener('click', () => updateStatus(pageId, newStatus));
+  return btn;
+}
+
+function updateCounts() {
+  const counts = { all: allLivrets.length, 'Pas commencé': 0, 'En cours': 0, 'Terminé': 0 };
+  allLivrets.forEach(l => { if (counts[l.status] !== undefined) counts[l.status]++; });
+  document.getElementById('count-all').textContent     = counts.all;
+  document.getElementById('count-pas').textContent     = counts['Pas commencé'];
+  document.getElementById('count-en').textContent      = counts['En cours'];
+  document.getElementById('count-termine').textContent = counts['Terminé'];
+}
+
+async function updateStatus(pageId, newStatus) {
+  const livret = allLivrets.find(l => l.id === pageId);
+  if (!livret) return;
+  const oldStatus = livret.status;
+  livret.status = newStatus;
+  updateCounts();
+  renderGrid();
+  try {
+    await notionReq('PATCH', '/pages/' + pageId, {
+      properties: { Status: { status: { name: newStatus } } }
+    });
+    showToast('Statut mis à jour : ' + newStatus, 'success');
+  } catch (e) {
+    livret.status = oldStatus;
+    updateCounts();
+    renderGrid();
+    showToast('Erreur : ' + e.message, 'error-toast');
+  }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+if (sessionStorage.getItem('auth') === '1') {
+  document.getElementById('auth-screen').style.display = 'none';
+  localStorage.getItem('notion_token') ? showDashboard() : showSetup();
+}
+</script>
+</body>
+</html>
