@@ -53,7 +53,7 @@ async function main() {
   const titre = titreMatch ? titreMatch[1].replace(' — Livret patient', '').trim() : nomFichier;
 
   // Vérifier le nombre de pages
-  const pageCount = (html.match(/class="page/g) || []).length;
+  const pageCount = (html.match(/class="page"/g) || []).length;
   console.log(`\n📄 Pages détectées : ${pageCount}${pageCount === 20 ? ' ✅' : ` ⚠️  (attendu 20, pair pour impression)`}`);
   if (pageCount % 2 !== 0) {
     console.log('   ⚠️  Nombre impair — le PDF aura une page vierge au verso de la dernière page.');
@@ -89,8 +89,10 @@ async function generatePDF(htmlPath, pdfPath) {
   const chromePaths = [
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
     '/usr/bin/chromium-browser',
-    '/usr/bin/google-chrome'
+    '/usr/bin/chromium'
   ];
   const executablePath = chromePaths.find(p => fs.existsSync(p));
   if (!executablePath) throw new Error('Chrome introuvable. Installe Google Chrome.');
