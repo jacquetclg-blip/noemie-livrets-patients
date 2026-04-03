@@ -20,8 +20,8 @@ Bibliothèque de livrets éducatifs pour patients en kinésithérapie.
 
 | Document | Description |
 |----------|-------------|
+| [Workflow complet](docs/workflow.md) | Les 2 étapes : HTML preview + finalisation PDF |
 | [Guide de création](docs/creation-livrets.md) | Specs complètes, CSS, structure 20 pages |
-| [Prompt Claude](docs/prompt-claude.md) | Prompt à copier-coller pour créer un nouveau livret |
 | [Charte graphique](docs/charte-graphique.md) | Couleurs, typographie, composants visuels |
 | [Règles anti-débordement](docs/anti-debordement.md) | Éviter les problèmes de mise en page |
 
@@ -29,12 +29,17 @@ Bibliothèque de livrets éducatifs pour patients en kinésithérapie.
 
 ## Créer un nouveau livret
 
-1. Ouvrir [docs/prompt-claude.md](docs/prompt-claude.md)
-2. Copier le prompt
-3. Remplacer `[SUJET]` par le thème voulu
-4. Coller dans Claude (claude.ai ou Claude Code)
-5. Le livret généré va dans `livrets/[nom-kebab-case].html`
-6. Pousser sur GitHub → déploiement automatique sur Cloudflare
+**Étape 1 — HTML + preview**
+```bash
+node scripts/create-livret.js "Titre du livret" nom-fichier
+```
+→ Génère 20 pages HTML, déploie, partage le lien de preview.
+
+**Étape 2 — Après validation**
+```bash
+node scripts/finalize-livret.js nom-fichier
+```
+→ Génère le PDF A5 (marges 3mm), l'enregistre dans Notion avec statut Terminé.
 
 ---
 
