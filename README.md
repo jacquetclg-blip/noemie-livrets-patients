@@ -29,17 +29,15 @@ Bibliothèque de livrets éducatifs pour patients en kinésithérapie.
 
 ## Créer un nouveau livret
 
-**Étape 1 — HTML + preview**
-```bash
-node scripts/create-livret.js "Titre du livret" nom-fichier
-```
-→ Génère 20 pages HTML, déploie, partage le lien de preview.
+**Étape 1 — Demander à Claude Code de générer le HTML**
+Claude génère les 20 pages, vérifie les débordements et pousse sur GitHub.
+Preview automatiquement dispo sur `livret.pages.dev/livrets/[nom].html`
 
-**Étape 2 — Après validation**
+**Étape 2 — Après ta validation**
 ```bash
 node scripts/finalize-livret.js nom-fichier
 ```
-→ Génère le PDF A5 (marges 3mm), l'enregistre dans Notion avec statut Terminé.
+→ PDF A5 (148×210mm, marges 3mm) + statut Terminé dans Notion.
 
 ---
 
