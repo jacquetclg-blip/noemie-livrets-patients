@@ -1,0 +1,13 @@
+{
+  "name": "noemie-livrets",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "create": "node scripts/create-livret.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@notionhq/client": "^2.2.15",
+    "puppeteer-core": "^24.0.0"
+  }
+}
