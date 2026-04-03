@@ -40,11 +40,39 @@ Bibliothèque de livrets éducatifs pour patients en kinésithérapie.
 
 ## Sujets prévus
 
-- [x] Le Sommeil & votre récupération
-- [ ] La Posture au bureau
-- [ ] La Respiration & performance
-- [ ] La Nutrition & récupération sportive
-- [ ] La Gestion de la douleur chronique
-- [ ] Le Retour au sport après blessure
-- [ ] La Prévention des blessures du genou
-- [ ] La Lombalgie : comprendre & agir
+### Sommeil & récupération
+- [x] Le Sommeil & votre récupération (`sommeil-recuperation`)
+
+### Arthrose
+- [ ] Arthrose — Livret général (`arthrose-general`)
+- [ ] Arthrose — Genou / gonarthrose (`arthrose-genou`)
+- [ ] Arthrose — Hanche / coxarthrose (`arthrose-hanche`)
+- [ ] Arthrose — Épaule / omarthrose (`arthrose-epaule`)
+- [ ] Arthrose — Dos / arthrose vertébrale (`arthrose-dos`)
+
+### Arthrite
+- [ ] Arthrite — Livret général (`arthrite-general`)
+- [ ] Arthrite — Rhumatismes inflammatoires (`arthrite-rhumatismes`)
+
+### Tendinopathies
+- [ ] Tendinopathie — Livret général (`tendinopathie-general`)
+- [ ] Tendinopathie — Coiffe des rotateurs (`tendinopathie-coiffe`)
+- [ ] Tendinopathie — Coude / épicondylite (`tendinopathie-coude`)
+- [ ] Tendinopathie — Achille (`tendinopathie-achille`)
+
+### Techniques & soins
+- [ ] Drainage lymphatique (`drainage-lymphatique`)
+- [ ] Drainage lymphatique manuel (`drainage-lymphatique-manuel`)
+- [ ] Pose de K-Tape (`pose-k-tape`)
+- [ ] Travail des cicatrices post-opératoires (`cicatrices-post-op`)
+
+### Éducation thérapeutique
+- [ ] Cohérence cardiaque (`coherence-cardiaque`)
+- [ ] Éducation aux neurosciences de la douleur (`neurosciences-douleur`)
+- [ ] Nutrition & kinésithérapie (`nutrition`)
+
+### Prévention & sport
+- [ ] Prévention — Livret général (`prevention-generale`)
+- [ ] Prévention et gestes spécifiques aux métiers (`prevention-metiers`)
+- [ ] Portage bébé (`portage-bebe`)
+- [ ] Programme de rééducation & reprise sportive (`reeducation-reprise-sportive`)
