@@ -41,7 +41,7 @@ body {
   width: 154mm;
   min-height: 216mm;
   height: 216mm;
-  padding: 8mm 10mm 19mm 10mm;
+  padding: 8mm 10mm 6mm 10mm;
   background: var(--color-bg);
   position: relative;
   overflow: hidden;
@@ -53,6 +53,14 @@ body {
   .page {
     margin: 0;
     box-shadow: none;
+  }
+}
+
+@media screen {
+  .page {
+    height: auto;
+    min-height: 0;
+    padding-bottom: 40px;
   }
 }
 
