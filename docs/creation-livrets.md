@@ -57,8 +57,9 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Lato', sans-serif; font-size: 10pt; line-height: 1.5; color: var(--color-text); background: #e0e0e0; }
-.page { width: 148mm; min-height: 210mm; height: 210mm; padding: 8mm 10mm 19mm 10mm; background: var(--color-bg); position: relative; overflow: hidden; margin: 10px auto; box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
+.page { width: 154mm; min-height: 216mm; height: 216mm; padding: 8mm 10mm 19mm 10mm; background: var(--color-bg); position: relative; overflow: hidden; margin: 10px auto; box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
 @media print { .page { margin: 0; box-shadow: none; } }
+@media screen { .page { height: auto; min-height: 0; padding-bottom: 40px; } }
 h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--color-primary); }
 h1 { font-size: 22pt; line-height: 1.2; }
 h2 { font-size: 14pt; margin-bottom: 2mm; line-height: 1.25; }

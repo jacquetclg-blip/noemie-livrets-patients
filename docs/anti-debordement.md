@@ -4,8 +4,11 @@ Le problème le plus fréquent : le contenu dépasse le bas de la page et passe 
 
 ## Règle d'or
 
-Hauteur utile maximum : **692px à 96dpi** (soit ~183mm).
-Au-delà, le contenu est coupé par `overflow: hidden`.
+Hauteur utile maximum : **741px à 96dpi** (soit ~196mm) pour le print.
+Au-delà, le contenu chevauche le footer ou est coupé par `overflow: hidden`.
+
+> Le `padding-bottom: 19mm` réserve la zone footer (`bottom: 25px` + hauteur footer ~15px).
+> En preview écran, `@media screen` passe la page en `height: auto; padding-bottom: 40px` — plus de grand espace vide sous le contenu.
 
 ## Vérification rapide
 
